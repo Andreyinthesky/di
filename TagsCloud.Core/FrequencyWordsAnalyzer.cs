@@ -37,7 +37,7 @@ namespace TagsCloud.Core
             
         }
 
-        public Dictionary<string, int> Analyze(IEnumerable<string> words)
+        public IOrderedEnumerable<KeyValuePair<string, int>> Analyze(IEnumerable<string> words)
         {
             return words
                 .Select(w => w.ToLower())
@@ -45,7 +45,7 @@ namespace TagsCloud.Core
                 .GroupBy(word => word)
                 .ToDictionary(group => group.Key, group => group.Count())
                 .Where(kvp => !stopWords.Contains(kvp.Key))
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                .OrderByDescending(kvp => kvp.Value);
         }
     }
 }

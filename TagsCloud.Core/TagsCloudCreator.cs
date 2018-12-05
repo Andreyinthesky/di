@@ -14,13 +14,14 @@ namespace TagsCloud.Core
         private readonly int maxFrequency;
         private readonly int minFrequency;
 
-        public TagsCloudCreator(ICloudLayouter layouter, Dictionary<string, int> frequencyByWord, FontSettings fontSettings)
+        public TagsCloudCreator(ICloudLayouter layouter, IOrderedEnumerable<KeyValuePair<string, int>> frequencyByWord, FontSettings fontSettings)
         {
             this.layouter = layouter;
-            this.frequencyByWord = frequencyByWord;
+            this.frequencyByWord = frequencyByWord
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             this.fontSettings = fontSettings;
-            maxFrequency = frequencyByWord.Values.Max();
-            minFrequency = frequencyByWord.Values.Min();
+            maxFrequency = this.frequencyByWord.Values.Max();
+            minFrequency = this.frequencyByWord.Values.Min();
         }
 
         public TagsCloud CreateTagsCloud()

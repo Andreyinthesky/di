@@ -18,25 +18,28 @@ namespace TagsCloud.Tests
         }
 
         [Test]
-        public void Analyze_ReturnCorrectWordsFrequencies()
+        public void Analyze_ReturnCorrectWordsFrequenciesWithOrderByDescending()
         {
             var words = new List<string>()
                 {"он", "не", "рассказал", "мне", "всей", "правды", "эх", "правда", "не", "правда"};
 
-            analyzer.Analyze(words)
-                .Should()
+            var frequencyByWord = analyzer.Analyze(words);
+
+            frequencyByWord.Should()
                 .BeEquivalentTo
                 (
-                    new Dictionary<string, int>() 
-                        { 
-                            ["рассказал"] = 1,
-                            ["эх"] = 1,
-                            ["правда"] = 2, 
-                            ["правды"] = 1,
-                            ["всей"] = 1,
-                            ["мне"] = 1
-                        }
-                );
+                    new Dictionary<string, int>()
+                    {
+                        ["рассказал"] = 1,
+                        ["эх"] = 1,
+                        ["правда"] = 2,
+                        ["правды"] = 1,
+                        ["всей"] = 1,
+                        ["мне"] = 1
+                    }
+                ).And
+                .BeInDescendingOrder(kvp => kvp.Value);
+
         }
 
         [Test]

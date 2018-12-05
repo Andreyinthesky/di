@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace TagsCloud.Core
 {
     public interface IFrequencyWordsAnalyzer
     {
-        Dictionary<string, int> Analyze(IEnumerable<string> words);
+        IOrderedEnumerable<KeyValuePair<string, int>> Analyze(IEnumerable<string> words);
     }
 }
