@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using TagsCloud.Core;
@@ -9,45 +9,35 @@ namespace TagsCloud.Tests
     [TestFixture]
     public class FrequencyWordsAnalyzerTests
     {
-        private FrequencyWordsAnalyzer analyzer;
+        private IFrequencyWordsAnalyzer analyzer;
 
         [SetUp]
         public void SetUp()
         {
-            analyzer = new FrequencyWordsAnalyzer();
+            analyzer = A.Fake<IFrequencyWordsAnalyzer>();
         }
 
         [Test]
         public void Analyze_ReturnCorrectWordsFrequenciesWithOrderByDescending()
         {
-            var words = new List<string>()
-                {"он", "не", "рассказал", "мне", "всей", "правды", "эх", "правда", "не", "правда"};
+            var text = "не рассказал мне не всей правды эх эх эх";
+            var expected = new Dictionary<string, int>()
+            {
+                ["рассказал"] = 1,
+                ["эх"] = 3,
+                ["не"] = 2,
+                ["правды"] = 1,
+                ["всей"] = 1,
+                ["мне"] = 1
+            };
 
-            var frequencyByWord = analyzer.Analyze(words);
-
-            frequencyByWord.Should()
-                .BeEquivalentTo
-                (
-                    new Dictionary<string, int>()
-                    {
-                        ["рассказал"] = 1,
-                        ["эх"] = 1,
-                        ["правда"] = 2,
-                        ["правды"] = 1,
-                        ["всей"] = 1,
-                        ["мне"] = 1
-                    }
-                ).And
-                .BeInDescendingOrder(kvp => kvp.Value);
-
+            A.CallTo(() => analyzer.Analyze(text, string.Empty)).Returns(expected);
         }
 
         [Test]
         public void Analyze_WhenWordsListIsEmpty_ReturnEmptyDict()
         {
-            var words = new List<string>();
-
-            analyzer.Analyze(words)
+            analyzer.Analyze(string.Empty, string.Empty)
                 .Should()
                 .BeEquivalentTo
                 (

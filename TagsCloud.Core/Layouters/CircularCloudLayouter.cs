@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TagsCloud.Core.Extensions;
 
-namespace TagsCloud.Core
+namespace TagsCloud.Core.Layouters
 {
     public class CircularCloudLayouter : ICloudLayouter
     {
@@ -14,19 +15,17 @@ namespace TagsCloud.Core
         private List<Rectangle> placedRectangles = new List<Rectangle>();
         private IEnumerator<Point> spiralEnumerator;
 
-        public CircularCloudLayouter()
+        public CircularCloudLayouter(Func<Point, double, ISpiral> spiralFactory)
         {
-            Center = new Point(0, 0);
-            spiralEnumerator = new Spiral(Center, 5).GetSpiralPoints()
+            Center = Point.Empty;
+            spiralEnumerator = spiralFactory(Center, 5).GetSpiralPoints()
                 .GetEnumerator();
         }
 
-        public CircularCloudLayouter(Point center)
-        {
-            Center = center;
-            spiralEnumerator = new Spiral(Center, 5).GetSpiralPoints()
-                .GetEnumerator();
-        }
+        //public Spiral CreateSpiral()
+        //{
+
+        //}
 
         public Rectangle PutNextRectangle(Size rectangleSize)
         {

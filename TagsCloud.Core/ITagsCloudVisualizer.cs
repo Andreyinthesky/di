@@ -4,6 +4,6 @@ namespace TagsCloud.Core
 {
     public interface ITagsCloudVisualizer
     {
-        Bitmap GetTagsCloudImage();
+        Bitmap GetCloudImage(string text, string stopWordsText);
     }
 }

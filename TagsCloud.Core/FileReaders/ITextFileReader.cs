@@ -1,4 +1,4 @@
-﻿namespace TagsCloud.Core
+﻿namespace TagsCloud.Core.FileReaders
 {
     public interface ITextFileReader
     {

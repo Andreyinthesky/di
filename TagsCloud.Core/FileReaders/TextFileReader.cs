@@ -1,23 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace TagsCloud.Core
+namespace TagsCloud.Core.FileReaders
 {
     public class TextFileReader : ITextFileReader
     {
         public string ReadText(string filePath)
         {
-            string text;
-            try
-            {
-                text = File.ReadAllText(filePath);
-            }
-            catch (FileNotFoundException e)
-            {
-                throw new ArgumentException(e.Message);
-            }
-
-            return text;
+            return File.ReadAllText(filePath);
         }
     }
 }

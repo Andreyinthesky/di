@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace TagsCloud.Core
+namespace TagsCloud.Core.Settings
 {
-    public class FontSettings
+    public class FontSettings : IFontSettings
     {
         public FontFamily FontFamily { get; set; } = new FontFamily("Segoe UI");
         public FontStyle FontStyle { get; set; } = FontStyle.Regular;

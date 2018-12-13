@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using TagsCloud.Core;
+using TagsCloud.Core.Layouters;
 
 namespace TagsCloud.Tests
 {

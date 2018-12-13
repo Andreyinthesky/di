@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using Fclp;
+using System;
+using System.Drawing.Text;
 using System.Linq;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Castle.Windsor.Installer;
-using Fclp;
 using TagsCloud.Core;
+using TagsCloud.Core.FileReaders;
+using TagsCloud.Core.Settings;
 
 namespace TagsCloud.ConsoleClient
 {
@@ -24,57 +22,53 @@ namespace TagsCloud.ConsoleClient
             if (parseResult.HasErrors)
             {
                 Console.WriteLine(parseResult.ErrorText);
+                return;
             }
 
-            var visualizer = ResolveTagsCloudVisualizer(argsParser.Object);
-            var image = visualizer.GetCloudImage();
+            var appSettings = argsParser.Object;
+            var container = new ContainerBuilder().Build();
+            var reader = container.Resolve<ITextFileReader>();
+
+            var text = reader
+                .ReadText(appSettings.InputTextFilePath);
+            var stopWordsText = reader
+                .ReadText(appSettings.InputStopWordsFilePath);
+
+            var imageSettings = container.Resolve<IImageSettings>();
+            var fontSettings = container.Resolve<IFontSettings>();
+            ApplyImageSettings(imageSettings, appSettings);
+            ApplyFontSettings(fontSettings, appSettings);
+
+            var image = container.Resolve<ITagsCloudVisualizer>().GetCloudImage(text, stopWordsText);
             image.Save("output.png");
             Console.WriteLine("Image save to output.png");
         }
 
-        public static TagsCloudVisualizer ResolveTagsCloudVisualizer(AppSettings appSettings)
+        public static void ApplyImageSettings(IImageSettings imageSettings, AppSettings appSettings)
         {
-            var container = new WindsorContainer();
+            imageSettings.Width = appSettings.Width;
+            imageSettings.Height = appSettings.Height;
+        }
 
-            container.Register(Castle.MicroKernel.Registration.Component.For<ITextFileReader>()
-                .ImplementedBy<TextFileReader>());
-
-            container.Register(Castle.MicroKernel.Registration.Component.For<ICloudLayouter>()
-                .ImplementedBy<CircularCloudLayouter>()
-                .DependsOn(Dependency.OnValue<Point>(new Point(0, 0)))
-            );
-
-            container.Register(Castle.MicroKernel.Registration.Component.For<IFrequencyWordsAnalyzer>()
-                .ImplementedBy<FrequencyWordsAnalyzer>());
-
-            var words = container.Resolve<ITextFileReader>().ReadText(appSettings.InputFilePath).Split();
-            var fontSettings = new FontSettings(
-                appSettings.TypeFace != null 
-                    ? new FontFamily(appSettings.TypeFace)
-                    : FontFamily.GenericMonospace);
-
-            container.Register(Castle.MicroKernel.Registration.Component.For<TagsCloudCreator>()
-                .DependsOn(
-                    Dependency.OnValue<ICloudLayouter>(container.Resolve<ICloudLayouter>()),
-                    Dependency.OnValue<IOrderedEnumerable<KeyValuePair<string, int>>>(container.Resolve<IFrequencyWordsAnalyzer>().Analyze(words)),
-                    Dependency.OnValue<FontSettings>(fontSettings))
-            );
-
-            container.Register(Castle.MicroKernel.Registration.Component.For<TagsCloudVisualizer>()
-                .DependsOn(
-                    Dependency.OnValue<ImageSettings>(new ImageSettings(appSettings.Width, appSettings.Height)),
-                    Dependency.OnValue<Core.TagsCloud>(container.Resolve<TagsCloudCreator>().CreateTagsCloud()))
-            );
-
-            return container.Resolve<TagsCloudVisualizer>();
+        public static void ApplyFontSettings(IFontSettings fontSettings, AppSettings appSettings)
+        {
+            fontSettings.FontFamily =
+                new InstalledFontCollection().Families.FirstOrDefault(f => f.Name == appSettings.TypeFace) ??
+                fontSettings.FontFamily;
         }
 
         public static FluentCommandLineParser<AppSettings> CreateArgsParser()
         {
             var argsParser = new FluentCommandLineParser<AppSettings>();
-            argsParser.Setup(arg => arg.InputFilePath)
-                .As('f', "file")
-                .WithDescription("input file path")
+
+            argsParser.Setup(arg => arg.InputTextFilePath)
+                .As('f', "text_file")
+                .WithDescription("input text file path")
+                .Required();
+
+            argsParser.Setup(arg => arg.InputStopWordsFilePath)
+                .As('s', "stopwords_file")
+                .WithDescription("input stop words file path")
                 .Required();
 
             argsParser.Setup(arg => arg.TypeFace)

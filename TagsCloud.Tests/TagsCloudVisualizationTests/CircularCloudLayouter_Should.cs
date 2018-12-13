@@ -8,6 +8,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using TagsCloud.Core;
+using TagsCloud.Core.Extensions;
+using TagsCloud.Core.Layouters;
 
 namespace TagsCloud.Tests
 {
@@ -21,7 +23,7 @@ namespace TagsCloud.Tests
         [SetUp]
         public void SetUp()
         {
-            layouter = new CircularCloudLayouter();
+            layouter = new CircularCloudLayouter(((center, step) => new Spiral(center, step)));
             rectangles = new List<Rectangle>();
             visualizer = new CircularCloudVisualizer(layouter);
         }

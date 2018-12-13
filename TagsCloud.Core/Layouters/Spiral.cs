@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace TagsCloud.Core
+namespace TagsCloud.Core.Layouters
 {
     /// <summary>
     /// Provides Archimedean spiral
     /// </summary>
-    public class Spiral
+    public class Spiral : ISpiral
     {
         private readonly double spiralStep;
         private readonly Point spiralCenter;

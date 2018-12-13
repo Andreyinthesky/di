@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace TagsCloud.Core
+namespace TagsCloud.Core.Extensions
 {
     public static class PointExtensions
     {

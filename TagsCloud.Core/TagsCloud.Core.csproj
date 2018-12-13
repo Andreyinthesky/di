@@ -37,6 +37,9 @@
     <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.4.1.1\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -52,7 +55,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ITagsCloudCreator.cs" />
+    <Compile Include="Settings\IFontSettings.cs" />
+    <Compile Include="Settings\IImageSettings.cs" />
+    <Compile Include="WordFilters\BasicFormWordConverter.cs" />
+    <Compile Include="WordFilters\ITextSplitter.cs" />
     <Compile Include="Layouters\CircularCloudLayouter.cs" />
+    <Compile Include="Layouters\ISpiral.cs" />
     <Compile Include="Settings\FontSettings.cs" />
     <Compile Include="Settings\ImageSettings.cs" />
     <Compile Include="IFrequencyWordsAnalyzer.cs" />
@@ -69,9 +79,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagsCloudCreator.cs" />
     <Compile Include="FileReaders\TextFileReader.cs" />
+    <Compile Include="WordFilters\IWordsConverter.cs" />
+    <Compile Include="WordFilters\TextSplitter.cs" />
+    <Compile Include="WordFilters\ToLowerConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="RU_Dict\ru_RU.aff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="RU_Dict\ru_RU.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
