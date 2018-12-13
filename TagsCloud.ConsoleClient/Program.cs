@@ -16,16 +16,7 @@ namespace TagsCloud.ConsoleClient
         /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            var argsParser = CreateArgsParser();
-            var parseResult = argsParser.Parse(args);
-
-            if (parseResult.HasErrors)
-            {
-                Console.WriteLine(parseResult.ErrorText);
-                return;
-            }
-
-            var appSettings = argsParser.Object;
+            var appSettings = new ArgumentsParser().Parse(args);
             var container = new ContainerBuilder().Build();
             var reader = container.Resolve<ITextFileReader>();
 
@@ -55,37 +46,6 @@ namespace TagsCloud.ConsoleClient
             fontSettings.FontFamily =
                 new InstalledFontCollection().Families.FirstOrDefault(f => f.Name == appSettings.TypeFace) ??
                 fontSettings.FontFamily;
-        }
-
-        public static FluentCommandLineParser<AppSettings> CreateArgsParser()
-        {
-            var argsParser = new FluentCommandLineParser<AppSettings>();
-
-            argsParser.Setup(arg => arg.InputTextFilePath)
-                .As('f', "text_file")
-                .WithDescription("input text file path")
-                .Required();
-
-            argsParser.Setup(arg => arg.InputStopWordsFilePath)
-                .As('s', "stopwords_file")
-                .WithDescription("input stop words file path")
-                .Required();
-
-            argsParser.Setup(arg => arg.TypeFace)
-                .As('t', "typeface")
-                .WithDescription("font typeface for tags");
-
-            argsParser.Setup(arg => arg.Width)
-                .As('w', "width")
-                .WithDescription("width of output image")
-                .SetDefault(400);
-
-            argsParser.Setup(arg => arg.Height)
-                .As('h', "height")
-                .WithDescription("height of output image")
-                .SetDefault(400);
-
-            return argsParser;
         }
     }
 }
