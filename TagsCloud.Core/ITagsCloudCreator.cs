@@ -1,7 +1,9 @@
-﻿namespace TagsCloud.Core
+﻿using TagsCloud.Core.Settings;
+
+namespace TagsCloud.Core
 {
     public interface ITagsCloudCreator
     {
-        TagsCloud CreateTagsCloud(string text, string stopWordsText);
+        TagsCloud CreateTagsCloud(string textFilePath, FontSettings fontSettings);
     }
 }

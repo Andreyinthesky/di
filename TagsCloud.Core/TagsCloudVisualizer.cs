@@ -1,36 +1,42 @@
 ﻿using System.Drawing;
+using System.Linq;
 using TagsCloud.Core.Settings;
 
 namespace TagsCloud.Core
 {
     public class TagsCloudVisualizer : ITagsCloudVisualizer
     {
-        public IImageSettings ImageSettings { get; }
         public ITagsCloudCreator TagsCloudCreator { get; }
+        public CloudSettings CloudSettings { get; }
 
-        public TagsCloudVisualizer(IImageSettings imageSettings, ITagsCloudCreator tagsCloudCreator)
+        public TagsCloudVisualizer(ITagsCloudCreator tagsCloudCreator, CloudSettings cloudSettings)
         {
-            ImageSettings = imageSettings;
             TagsCloudCreator = tagsCloudCreator;
+            CloudSettings = cloudSettings;
         }
 
-        public Bitmap GetCloudImage(string text, string stopWordsText)
+        public Bitmap GetCloudImage()
         {
-            var tagsCloud = TagsCloudCreator.CreateTagsCloud(text, stopWordsText);
-            var image = new Bitmap(ImageSettings.Width, ImageSettings.Height);
+            var imageSettings = CloudSettings.ImageSettings;
+            var tagsCloud = TagsCloudCreator
+                .CreateTagsCloud(CloudSettings.InputTextFilePath, CloudSettings.FontSettings);
+            var image = new Bitmap(imageSettings.Width, imageSettings.Height);
             var graphics = Graphics.FromImage(image);
-            DrawTags(tagsCloud, graphics, image.Size);
+            DrawTags(imageSettings, tagsCloud, graphics, CloudSettings.WordsCount);
             return image;
         }
 
-        private void DrawTags(TagsCloud tagsCloud, Graphics graphics, Size imageSize)
+        private void DrawTags(ImageSettings imageSettings, TagsCloud tagsCloud, Graphics graphics, int tagsCount)
         {
-            graphics.FillRectangle(new SolidBrush(ImageSettings.BackgroundColor), 0, 0, imageSize.Width, imageSize.Height);
+            graphics.FillRectangle(new SolidBrush(imageSettings.BackgroundColor), 0, 0, imageSettings.Width, imageSettings.Height);
 
-            foreach (var tag in tagsCloud.Tags)
+            foreach (var tag in tagsCloud.Tags.Take(tagsCount))
             {
-                var shiftedRectangle = ShiftRectangleToImageCenter(tagsCloud, tag.Rectangle, imageSize);
-                graphics.DrawString(tag.Text, tag.Font, new SolidBrush(ImageSettings.ForegroundColor), shiftedRectangle);
+                var shiftedRectangle = ShiftRectangleToImageCenter(
+                    tagsCloud,
+                    tag.Rectangle, 
+                    new Size(imageSettings.Width, imageSettings.Height));
+                graphics.DrawString(tag.Text, tag.Font, new SolidBrush(imageSettings.ForegroundColor), shiftedRectangle);
             }
         }
 

@@ -4,6 +4,6 @@ namespace TagsCloud.Core
 {
     public interface IFrequencyWordsAnalyzer
     {
-        IEnumerable<KeyValuePair<string, int>> Analyze(string text, string stopWordsText);
+        IEnumerable<KeyValuePair<string, int>> Analyze(IEnumerable<string> words);
     }
 }

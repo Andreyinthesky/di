@@ -4,9 +4,9 @@ using TagsCloud.Core.Extensions;
 
 namespace TagsCloud.Core.WordFilters
 {
-    public class TextSplitter : ITextSplitter
+    public class TextSplitter : IMapper<string, IEnumerable<string>>
     {
-        public IEnumerable<string> SplitWords(string text)
+        public IEnumerable<string> Map(string text)
         {
             return text
                 .RemoveSpecialSymbols()

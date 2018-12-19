@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using TagsCloud.Core;
+using TagsCloud.Core.WordFilters;
 
 namespace TagsCloud.Tests
 {
@@ -14,30 +14,31 @@ namespace TagsCloud.Tests
         [SetUp]
         public void SetUp()
         {
-            analyzer = A.Fake<IFrequencyWordsAnalyzer>();
+            analyzer = new FrequencyWordsAnalyzer(new IWordFilter[0]);
         }
 
         [Test]
-        public void Analyze_ReturnCorrectWordsFrequenciesWithOrderByDescending()
+        public void Analyze_ReturnCorrectWordsFrequencies()
         {
-            var text = "не рассказал мне не всей правды эх эх эх";
+            var words = new List<string>()
+                {"он", "не", "рассказал", "всей", "эх", "правда", "не", "правда", "эх", "эх"};
             var expected = new Dictionary<string, int>()
             {
                 ["рассказал"] = 1,
+                ["он"] = 1,
                 ["эх"] = 3,
                 ["не"] = 2,
-                ["правды"] = 1,
-                ["всей"] = 1,
-                ["мне"] = 1
+                ["правда"] = 2,
+                ["всей"] = 1
             };
 
-            A.CallTo(() => analyzer.Analyze(text, string.Empty)).Returns(expected);
+            analyzer.Analyze(words).Should().BeEquivalentTo(expected);
         }
 
         [Test]
         public void Analyze_WhenWordsListIsEmpty_ReturnEmptyDict()
         {
-            analyzer.Analyze(string.Empty, string.Empty)
+            analyzer.Analyze(new List<string>())
                 .Should()
                 .BeEquivalentTo
                 (

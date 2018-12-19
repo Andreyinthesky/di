@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Drawing;
-using TagsCloud.Core;
 using TagsCloud.Core.Extensions;
 
 namespace TagsCloud.Tests
