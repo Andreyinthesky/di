@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8724074A-2E62-4C36-AF0F-9BEC0681190A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TagsCloud.Core</RootNamespace>
+    <AssemblyName>TagsCloud.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="IProvider.cs" />
+    <Compile Include="ITagsCloudCreator.cs" />
+    <Compile Include="ITextPreprocessor.cs" />
+    <Compile Include="Settings\CloudSettings.cs" />
+    <Compile Include="Settings\ICloudSettings.cs" />
+    <Compile Include="Settings\IFontSettings.cs" />
+    <Compile Include="Settings\IImageSettings.cs" />
+    <Compile Include="StopWordsProvider.cs" />
+    <Compile Include="WordConverters\BasicFormWordConverter.cs" />
+    <Compile Include="WordFilters\IMapper.cs" />
+    <Compile Include="Layouters\CircularCloudLayouter.cs" />
+    <Compile Include="Layouters\ISpiral.cs" />
+    <Compile Include="Settings\FontSettings.cs" />
+    <Compile Include="Settings\ImageSettings.cs" />
+    <Compile Include="IFrequencyWordsAnalyzer.cs" />
+    <Compile Include="ITagsCloudVisualizer.cs" />
+    <Compile Include="TagsCloud.cs" />
+    <Compile Include="TagsCloudVisualizer.cs" />
+    <Compile Include="Extensions\PointExtensions.cs" />
+    <Compile Include="Extensions\RectangleExtensions.cs" />
+    <Compile Include="Layouters\ICloudLayouter.cs" />
+    <Compile Include="FileReaders\ITextFileReader.cs" />
+    <Compile Include="Layouters\Spiral.cs" />
+    <Compile Include="Tag.cs" />
+    <Compile Include="FrequencyWordsAnalyzer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TagsCloudCreator.cs" />
+    <Compile Include="FileReaders\TextFileReader.cs" />
+    <Compile Include="WordConverters\IWordConverter.cs" />
+    <Compile Include="WordFilters\IWordFilter.cs" />
+    <Compile Include="WordFilters\StopWordFilter.cs" />
+    <Compile Include="WordFilters\TextSplitter.cs" />
+    <Compile Include="WordConverters\ToLowerConverter.cs" />
+    <Compile Include="TextPreprocessor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="RU_Dict\ru_RU.aff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RU_Dict\ru_RU.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
